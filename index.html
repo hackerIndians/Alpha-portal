@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alpha Access Portal</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+      background: radial-gradient(circle at top left, #241d11, #0d0d0d 70%);
+      color: #ffffff;
+    }
+    .card {
+      width: 100%; max-width: 400px; padding: 36px 32px;
+      background: rgba(20, 19, 17, 0.9); border: 1px solid #2e2a22;
+      border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+    .tag { font-size: 11px; letter-spacing: 2px; color: #9e9b95; font-weight: 700; margin-bottom: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .logo-box {
+      width: 38px; height: 38px; border: 1.5px solid #d4b06a; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; color: #d4b06a; font-weight: bold;
+    }
+    .brand-name { font-size: 18px; font-weight: 700; }
+    h1 { font-size: 26px; margin: 0 0 10px 0; }
+    p.sub { font-size: 14px; color: #a1a1aa; line-height: 1.5; margin: 0 0 28px 0; }
+    label { display: block; font-size: 11px; letter-spacing: 1.5px; color: #9e9b95; font-weight: 700; margin-bottom: 8px; }
+    input {
+      width: 100%; padding: 14px; margin-bottom: 20px; background: #141413;
+      border: 1px solid #2b2927; border-radius: 8px; color: #fff; font-size: 14px;
+    }
+    input:focus { outline: none; border-color: #d4b06a; }
+    button {
+      width: 100%; padding: 14px; background: #e2be79; color: #12100c; border: none;
+      border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 6px;
+    }
+    button:hover { background: #eccb8b; }
+    .footer-note { font-size: 12px; color: #71717a; margin-top: 28px; }
+    .error { color: #f87171; font-size: 13px; margin-bottom: 12px; display: none; }
+    #dashboard { display: none; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="card" id="login-card">
+    <div class="tag">ALPHA ACCESS</div>
+    <div class="brand">
+      <div class="logo-box">X</div>
+      <div class="brand-name">Portal</div>
+    </div>
+    <h1>Enter Portal</h1>
+    <p class="sub">Use your access code to unlock this browser. You will not need to enter it again after successful verification.</p>
+
+    <div class="error" id="error-msg">Invalid access code.</div>
+
+    <label for="display-name">DISPLAY NAME</label>
+    <input type="text" id="display-name" placeholder="Enter your name" />
+
+    <label for="access-code">ACCESS CODE</label>
+    <input type="password" id="access-code" placeholder="Enter your code" />
+
+    <button onclick="verifyAccess()">Enter Portal</button>
+    <div class="footer-note">Access codes are single-use and cannot be reclaimed.</div>
+  </div>
+
+  <div class="card" id="dashboard">
+    <h1>Welcome, <span id="user-greeting"></span>!</h1>
+    <p class="sub">Your browser is verified and unlocked.</p>
+    <button onclick="resetAccess()">Lock Browser</button>
+  </div>
+
+  <script>
+    const VALID_CODE = "ALPHA2026"; // Change this to your desired access code
+
+    window.onload = function() {
+      const savedName = localStorage.getItem("verifiedUser");
+      if (savedName) showDashboard(savedName);
+    };
+
+    function verifyAccess() {
+      const name = document.getElementById("display-name").value.trim();
+      const code = document.getElementById("access-code").value.trim();
+      const errorMsg = document.getElementById("error-msg");
+
+      if (!name || code !== VALID_CODE) {
+        errorMsg.style.display = "block";
+        return;
+      }
+      localStorage.setItem("verifiedUser", name);
+      showDashboard(name);
+    }
+
+    function showDashboard(name) {
+      document.getElementById("login-card").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      document.getElementById("user-greeting").textContent = name;
+    }
+
+    function resetAccess() {
+      localStorage.removeItem("verifiedUser");
+      location.reload();
+    }
+  </script>
+</body>
+</html>
